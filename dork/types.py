@@ -24,19 +24,22 @@ class Holder(Grandparent):
         super().__init__()
         self.inventory = {}
 
-    # def get_items(self, verbose):
-    #     """Print all inventory items"""
+    def get_items(self, verbose):
+        """Print all inventory items"""
 
-    #     if self.inventory:
-    #         out = f"\n    inventory:"
-    #     else:
-    #         out = f"There's nothing here."
+        if self.inventory:
+            out = f"\nInventory"
+        else:
+            out = f"There's nothing here."
 
-    #     return(vars(self.inventory))
-
-        # if verbose:
-        #     return out + Game._verbose_print(self.inventory)
-        # return out + Game._brief_print(self.inventory)
+        for name, item in self.inventory.items():
+            out += f"\n    {name}"
+            if verbose:
+                out += Game._verbose_print(vars(item))
+            else:
+                out += Game._brief_print(vars(item))
+        
+        return out
 
         # if self.stats is None:
         #     self.usable = NotUsable
@@ -166,7 +169,6 @@ class Item(Stats):
 
     def __init__(self):
         super().__init__()
-        self.name = str
         self.description = str
         self.type = str
 
@@ -183,7 +185,6 @@ class Player(Holder):
         self.location = Room
         self.equipped = list
         self.instances.append(self)
-
 
     def move(self, cardinal, maze):
         """walk this way"""
@@ -390,10 +391,9 @@ class Game:
             print()
         return self.hero.location.description, False
 
-    def _save_game(self):
-        self._get_state()
-        Gamebuilder.save_game(self.hero.name, self.data)
-        return "game saved successfully!", False
+    # def _save_game(self):
+    #     Gamebuilder.save_game(self.hero.name, self.data)
+    #     return "game saved successfully!", False
 
     # def _take(self, item="all"):
     #     # Item defaults to "all", and adds all items in room to inventory
@@ -428,10 +428,6 @@ class Game:
             out = "Guess you changed your mind!"
         return out, False
 
-    def _get_state(self):
-        for name, room in self.rooms.items():
-            self.data["rooms"][name] = room.data
-
     @staticmethod
     def _verbose_print(data, calls=2):
         out = ""
@@ -440,7 +436,7 @@ class Game:
             if isinstance(val, dict):
                 out += "\n" + spc*calls + \
                     f"{key}:{Game._verbose_print(val, calls+1)}"
-            elif val not in (0, ''):
+            elif val:
                 out += "\n" + spc*calls + f"{key}: {val}"
         return out
 
@@ -501,8 +497,8 @@ class ItemFactory:
     abstract = names["abstract"]
     adjectives = names["adjectives"]
 
-    @classmethod
-    def build(cls, weights=None):
+    @staticmethod
+    def build(weights=None):
         """generate a random item"""
 
         weights = {
@@ -510,20 +506,20 @@ class ItemFactory:
         }.get(weights, [8, 35, 3, 7, 5, 10])
 
         item_type = choice(choices(
-            population=list(cls.types.keys()),
+            population=list(ItemFactory.types.keys()),
             weights=weights,
-            k=len(list(cls.types.keys()))
+            k=len(list(ItemFactory.types.keys()))
         ))
 
         item_name = choice(choices(
-            population=cls.types[item_type],
-            k=len(cls.types[item_type])
+            population=ItemFactory.types[item_type],
+            k=len(ItemFactory.types[item_type])
         ))
 
-        return cls._forge(item_name, item_type)
+        return ItemFactory._forge(item_name, item_type)
 
-    @classmethod
-    def _generate(cls, stats, item_name, item_type):
+    @staticmethod
+    def _generate(stats, item_name, item_type):
         return {
             "name": item_name,
             "type": item_type,
@@ -531,15 +527,15 @@ class ItemFactory:
             "stats": stats
         }
 
-    @classmethod
-    def _stats(cls, item_name, item_type):
+    @staticmethod
+    def _stats(item_name, item_type):
         stats = factory_data.stats(item_type.split()[0])
-        return cls._generate(stats, item_name, item_type)
+        return ItemFactory._generate(stats, item_name, item_type)
 
-    @classmethod
-    def _forge(cls, item_name, item_type):
+    @staticmethod
+    def _forge(item_name, item_type):
         new_name = []
-        build = cls.sequence[item_type]
+        build = ItemFactory.sequence[item_type]
 
         seq = choice(choices(
             population=build["seq"],
@@ -562,7 +558,7 @@ class ItemFactory:
             ))
 
             if this_word:
-                if this_word in cls.suffixes:
+                if this_word in ItemFactory.suffixes:
                     new_name[-1] += this_word
                     item_type = f"legendary {item_name}"
                 else:
@@ -571,7 +567,7 @@ class ItemFactory:
                 new_name.append(item_name)
 
         item_name = " ".join(new_name)
-        return cls._stats(item_name, item_type)
+        return ItemFactory._stats(item_name, item_type)
 
 
 class PlayerFactory:
@@ -609,19 +605,19 @@ class RoomFactory:
         "east": (0, 1), "west": (0, -1),
     }
 
-    @classmethod
-    def build(cls, maze, rooms):
+    @staticmethod
+    def build(maze, rooms):
         """build a room"""
 
-        cls.maze = maze
-        cls.rooms = rooms
-        cls.worldmap = {}
-        return cls._make_rooms()
+        RoomFactory.maze = maze
+        RoomFactory.rooms = rooms
+        RoomFactory.worldmap = {}
+        return RoomFactory._make_rooms()
 
-    @classmethod
-    def _make_rooms(cls):
+    @staticmethod
+    def _make_rooms():
         i = 0
-        for room in cls.rooms:
+        for room in RoomFactory.rooms:
             x, y = room
             new_room = {
                 "name": f"room {i}",
@@ -637,39 +633,43 @@ class RoomFactory:
 
             for _ in range(randint(1, 7)):
                 new_item = ItemFactory.build()
-                new_room["inventory"][new_item["name"]] = new_item
+                new_room["inventory"][new_item.pop("name")] = new_item
 
             for _ in range(randint(0, 2)):
                 new_player = PlayerFactory.build(i, new_room)
                 new_room["players"][new_player["name"]] = new_player
 
-            cls.worldmap[room] = new_room
+            RoomFactory.worldmap[room] = new_room
             i += 1
 
-        return cls._get_adj()
+        return RoomFactory._get_adj()
 
-    @classmethod
-    def _get_adj(cls):
-        for coord, room in cls.worldmap.items():
-            for direction in cls.moves:
+    @staticmethod
+    def _get_adj():
+        for coord, room in RoomFactory.worldmap.items():
+            for direction in RoomFactory.moves:
                 searching = True
                 position = coord
                 while searching:
-                    position = tuple(map(add, position, cls.moves[direction]))
-                    if cls.maze[position] == MazeFactory.wall_color:
+                    position = tuple(
+                        map(
+                            add, position, RoomFactory.moves[direction]
+                        )
+                    )
+                    if RoomFactory.maze[position] == MazeFactory.wall_color:
                         room["adjacent"][direction] = None
                         searching = False
-                    elif cls.maze[position] in \
+                    elif RoomFactory.maze[position] in \
                             [MazeFactory.room_color, MazeFactory.player_color]:
                         room["adjacent"][direction] = \
-                            cls.worldmap[position]["name"]
+                            RoomFactory.worldmap[position]["name"]
                         searching = False
 
-        for coord, room in deepcopy(cls.worldmap).items():
-            new_room = cls.worldmap.pop(coord)
-            cls.worldmap[new_room.pop("name")] = new_room
+        for coord, room in deepcopy(RoomFactory.worldmap).items():
+            new_room = RoomFactory.worldmap.pop(coord)
+            RoomFactory.worldmap[new_room.pop("name")] = new_room
 
-        return cls.worldmap
+        return RoomFactory.worldmap
 
 
 class MazeFactory:
