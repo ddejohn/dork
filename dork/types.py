@@ -22,19 +22,21 @@ class Holder(Grandparent):
 
     def __init__(self):
         super().__init__()
-        self.inventory = dict
+        self.inventory = {}
 
-    def get_items(self, caller, verbose):
-        """Print all inventory items"""
+    # def get_items(self, verbose):
+    #     """Print all inventory items"""
 
-        if self.inventory:
-            out = f"\n    inventory:"
-        else:
-            out = f"There's nothing here."
+    #     if self.inventory:
+    #         out = f"\n    inventory:"
+    #     else:
+    #         out = f"There's nothing here."
 
-        if verbose:
-            return out + Game._verbose_print(caller.data["inventory"])
-        return out + Game._brief_print(caller.data["inventory"])
+    #     return(vars(self.inventory))
+
+        # if verbose:
+        #     return out + Game._verbose_print(self.inventory)
+        # return out + Game._brief_print(self.inventory)
 
         # if self.stats is None:
         #     self.usable = NotUsable
@@ -132,7 +134,6 @@ class Stats:
     """stats for items"""
 
     def __init__(self):
-        self.data = dict
         self.attack = int
         self.strength = int
         self.weight = int
@@ -165,7 +166,6 @@ class Item(Stats):
 
     def __init__(self):
         super().__init__()
-        self.data = dict
         self.name = str
         self.description = str
         self.type = str
@@ -178,14 +178,12 @@ class Player(Holder):
 
     def __init__(self):
         super().__init__()
-        self.data = dict
         self.name = str
         self.description = str
         self.location = Room
         self.equipped = list
-
-    def _new_instance(self):
         self.instances.append(self)
+
 
     def move(self, cardinal, maze):
         """walk this way"""
@@ -197,8 +195,8 @@ class Player(Holder):
         else:
             maze[self.location.x][self.location.y] = MazeFactory.room_color
 
-            adjacent_room.data["players"][self.name] = \
-                self.location.data["players"].pop(self.name)
+            adjacent_room.players[self.name] = \
+                self.location.players.pop(self.name)
             self.location = adjacent_room
             maze[self.location.x][self.location.y] = MazeFactory.player_color
 
@@ -214,22 +212,30 @@ class Room(Adjacent, Coord, Holder):
 
     def __init__(self):
         super().__init__()
-        self.data = dict
         self.description = str
-        self.players = dict
-
-    def _new_instance(self):
+        self.players = {}
         self.instances.append(self)
 
 
 class Gamebuilder:
     """Build an instance of Game"""
 
-    @classmethod
-    def build(cls, player_name):
+    attr_factories = {
+        "adjacent": Adjacent,
+        "coordinates": Coord,
+        "stats": Stats,
+    }
+
+    dict_factories = {
+        "players": Player,
+        "inventory": Item,
+    }
+
+    @staticmethod
+    def build(player_name):
         """Instantiate a game of Dork from dictionary"""
 
-        data = cls.load_game(player_name)
+        data = Gamebuilder.load_game(player_name)
 
         if not data:
             data = MazeFactory.build()
@@ -244,12 +250,12 @@ class Gamebuilder:
 
             data["rooms"]["room 0"]["players"][player_name] = hero_data
 
-        game = cls._instantiate(Game, **data)
+        game = Game()
         setattr(game, "maze", data["maze"])
-        setattr(game, "rooms", cls._make_rooms(deepcopy(data["rooms"])))
+        setattr(game, "rooms", Gamebuilder._make_rooms(data["rooms"]))
 
-        cls._place_players(game)
-        cls._make_paths(game)
+        Gamebuilder._place_players(game)
+        Gamebuilder._make_paths(game)
 
         for player in Player.instances:
             if player.name == player_name:
@@ -259,93 +265,48 @@ class Gamebuilder:
         game.maze[hero.location.x][hero.location.y] = MazeFactory.player_color
         return game
 
-    @classmethod
-    def _place_players(cls, game):
+    @staticmethod
+    def _place_players(game):
         for _, room in game.rooms.items():
             for _, player in room.players.items():
                 player.location = room
 
-    @classmethod
-    def _make_paths(cls, game):
+    @staticmethod
+    def _make_paths(game):
         adj = ["north", "south", "east", "west"]
         for _, room in game.rooms.items():
-            for direction, room_name in vars(room).items():
-                if room_name and direction in adj:
-                    setattr(room, direction, game.rooms[room_name])
-
-    @classmethod
-    def _make_rooms(cls, rooms):
-
-        factories = {
-            "adjacent": cls._make_adjacent,
-            "inventory": cls._make_item,
-            "players": cls._make_player,
-            "stats": cls._make_stats,
-        }
-
-        for name, room in rooms.items():
-            new_room = cls._instantiate(Room, **room)
-            for field, data in room.items():
-                if field == "adjacent":
-                    cls._make_adjacent(new_room, data)
-                elif field == "coordinates":
-                    cls._make_coord(new_room, data)
-                elif isinstance(data, dict):
-                    room_field = getattr(new_room, field)
-                    for sub in data:
-                        room_field[sub] = factories[field](data[sub])
-                else:
-                    setattr(new_room, field, data)
-            rooms[name] = new_room
-            new_room._new_instance()
-        return rooms
-
-    @classmethod
-    def _make_player(cls, player):
-        new_player = cls._instantiate(Player, **player)
-        for field, data in player.items():
-            if isinstance(data, dict):
-                inventory = getattr(new_player, field)
-                for sub in data:
-                    inventory[sub] = cls._make_item(data)
-            else:
-                setattr(new_player, field, data)
-        new_player._new_instance()
-        return new_player
-
-    @classmethod
-    def _make_item(cls, item):
-        new_item = cls._instantiate(Item, **item)
-        for field, data in item.items():
-            if field == "stats":
-                cls._make_stats(new_item, data)
-            else:
-                setattr(new_item, field, data)
-        return new_item
-
-    @classmethod
-    def _make_adjacent(cls, room, adjacent):
-        for key, val in adjacent.items():
-            setattr(room, key, val)
-
-    @classmethod
-    def _make_coord(cls, room, coord):
-        setattr(room, "x", coord[0])
-        setattr(room, "y", coord[1])
-
-    @classmethod
-    def _make_stats(cls, item, stats):
-        for key, val in stats.items():
-            setattr(item, key, val)
+            for direction in adj:
+                this_adj = getattr(room, direction)
+                setattr(room, direction, game.rooms.get(this_adj, None))
 
     @staticmethod
-    def _instantiate(clz, **data):
-        """return an object of type clz with attributes given by data"""
+    def _make_rooms(rooms):
+        for name, room in rooms.items():
+            new_room = Gamebuilder._rec_inst(Room, **room)
+            rooms[name] = new_room
+        return rooms
 
+    @staticmethod
+    def _set_attrs(obj, **data):
+        for key, val in data.items():
+            setattr(obj, key, val)
+        return obj
+
+    @staticmethod
+    def _rec_inst(clz, **data):
         new_obj = clz()
-        setattr(new_obj, "data", data)
-        for key, val in deepcopy(data).items():
-            setattr(new_obj, key, val)
+        for key, val in data.items():
+            if key in Gamebuilder.dict_factories:
+                for sub in val:
+                    new_sub = Gamebuilder._rec_inst(
+                        Gamebuilder.dict_factories[key], **val[sub]
+                    )
+                    getattr(new_obj, key)[sub] = new_sub
+            elif key in Gamebuilder.attr_factories:
+                for sub_key, sub_val in val.items():
+                    setattr(new_obj, sub_key, sub_val)
+            else:
+                setattr(new_obj, key, val)
         return new_obj
 
     @staticmethod
@@ -361,7 +322,7 @@ class Gamebuilder:
             with open(file_path) as file:
                 data = yaml.safe_load(file.read())
         else:
-            data = dict()
+            data = {}
         return data
 
     @staticmethod
@@ -389,7 +350,6 @@ class Game:
     verbose = False
 
     def __init__(self):
-        self.data = {}
         self.maze = []
         self.rooms = {}
         self.hero = Player()
@@ -416,12 +376,10 @@ class Game:
         return self.hero.move(cardinal, self.maze), False
 
     def _examine(self):
-        return self.hero.location.get_items(
-            self.hero.location, self.verbose
-        ), False
+        return self.hero.location.get_items(self.verbose), False
 
     def _inventory(self):
-        return self.hero.get_items(self.hero, self.verbose), False
+        return self.hero.get_items(self.verbose), False
 
     def _look(self, x="n"):
         if x == "around":
@@ -668,7 +626,10 @@ class RoomFactory:
             new_room = {
                 "name": f"room {i}",
                 "description": f"room {i} description",
-                "coordinates": [x, y],
+                "coordinates": {
+                    "x": x,
+                    "y": y,
+                },
                 "adjacent": {},
                 "players": {},
                 "inventory": {},
@@ -676,11 +637,11 @@ class RoomFactory:
 
             for _ in range(randint(1, 7)):
                 new_item = ItemFactory.build()
-                new_room["inventory"][new_item.pop("name")] = new_item
+                new_room["inventory"][new_item["name"]] = new_item
 
             for _ in range(randint(0, 2)):
                 new_player = PlayerFactory.build(i, new_room)
-                new_room["players"][new_player.pop("name")] = new_player
+                new_room["players"][new_player["name"]] = new_player
 
             cls.worldmap[room] = new_room
             i += 1
