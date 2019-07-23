@@ -38,35 +38,7 @@ class Holder(Grandparent):
                 out += Game._verbose_print(vars(item))
             else:
                 out += Game._brief_print(vars(item))
-        
         return out
-
-        # if self.stats is None:
-        #     self.usable = NotUsable
-
-        # elif len(self.stats) > 1:
-        #     self.set_usable(self.stats[1])
-        # else:
-        #     self.usable = NotUsable
-
-    # def set_usable(self, new_use):
-    #     """This method changes the use behavior,
-    #     provide usable class as argument"""
-    #     uses = {"attack": Attackable,
-    #             "key": Openable,
-    #             "gold": Payable,
-    #             "emerald": Puzzleable,
-    #             "diamond": Puzzleable,
-    #             "speed": Statable,
-    #             "strength": Statable}
-    #     if new_use is None or new_use not in uses:
-    #         self.usable = NotUsable
-    #     else:
-    #         self.usable = uses[new_use]
-
-    # def use(self, target, name):
-    #     """Strategy pattern call"""
-    #     self.usable.use(target, name)
 
 
 class Usable(ABC):
@@ -390,36 +362,6 @@ class Game:
                 print(item)
             print()
         return self.hero.location.description, False
-
-    # def _save_game(self):
-    #     Gamebuilder.save_game(self.hero.name, self.data)
-    #     return "game saved successfully!", False
-
-    # def _take(self, item="all"):
-    #     # Item defaults to "all", and adds all items in room to inventory
-    #     room_items = self.hero.location.items
-    #     room_items2 = room_items.copy()
-    #     player = self.hero.items
-    #     if item == "all":
-    #         for item_n in room_items2:
-    #             player[item_n] = room_items.pop(item_n)
-    #         return f"You took {item} item. You took them well.", False
-    #     player[item] = room_items.pop(item)
-    #     return f"You took the {item}. You took it well.", False
-
-    # def _drop_item(self, item):
-    #     """drops specific item from player to room"""
-    #     player = self.hero.items
-    #     room_items = self.hero.location.items
-    #     room_items[item] = player.pop(item)
-    #     return "Oops, you dropped something!", False
-
-    # def _use_item(self, item="Nothing"):
-    #     if item in self.hero.items.keys():
-    #         target = input("What do you want to use it on? ")
-    #         self.hero.items[item].use(target, item)
-    #         return "You used the thing! It's super effective!", False
-    #     return "You don't have that item...", False
 
     def _start_over(self):
         if self._confirm():
