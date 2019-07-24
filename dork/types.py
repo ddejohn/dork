@@ -193,11 +193,7 @@ class Room(Adjacent, Coord, Holder):
 class Gamebuilder:
     """Build an instance of Game"""
 
-    attr_factories = {
-        "adjacent": Adjacent,
-        "coordinates": Coord,
-        "stats": Stats,
-    }
+    attrs = ["adjacent", "coordinates", "stats"]
 
     dict_factories = {
         "players": Player,
@@ -270,12 +266,12 @@ class Gamebuilder:
         new_obj = clz()
         for key, val in data.items():
             if key in Gamebuilder.dict_factories:
-                for sub in val:
+                for sub_key, sub_val in val.items():
                     new_sub = Gamebuilder._rec_inst(
-                        Gamebuilder.dict_factories[key], **val[sub]
+                        Gamebuilder.dict_factories[key], **sub_val
                     )
-                    getattr(new_obj, key)[sub] = new_sub
-            elif key in Gamebuilder.attr_factories:
+                    getattr(new_obj, key)[sub_key] = new_sub
+            elif key in Gamebuilder.attrs:
                 for sub_key, sub_val in val.items():
                     setattr(new_obj, sub_key, sub_val)
             else:
@@ -299,22 +295,48 @@ class Gamebuilder:
         return data
 
     @staticmethod
-    def save_game(player, data):
+    def save_game(game):
         """Save a game instance to a yaml file if it exists, else create one"""
 
+        def _rec_data(data):
+            out = {}
+            for key, val in data.items():
+                if isinstance(val, (Item, Player)):
+                    print(type(data[key]).__bases__)
+                    out[key] = _rec_data(vars(val))
+                elif isinstance(val, Room):
+                    out[key] = val.name
+                elif isinstance(val, dict):
+                    out[key] = _rec_data(val)
+                else:
+                    out[key] = val
+            return out
+
         data = {
-            "rooms": data["rooms"],
-            "maze": data["maze"],
+            "maze": game.maze,
+            "rooms": {}
         }
+        for name, room in game.rooms.items():
+            new_room = {}
+            for key, val in vars(room).items():
+                if isinstance(val, dict):
+                    new_room[key] = _rec_data(val)
+                elif isinstance(val, Room):
+                    new_room[key] = val.name
+                else:
+                    new_room[key] = val
+            data["rooms"][name] = new_room
 
-        file_name = f"./dork/saves/{player}.yml"
-        with open(file_name, "w") as save_file:
-            yaml.safe_dump(
-                data, save_file,
-                indent=4, width=80,
-            )
+        # print(Game._verbose_print(data))
 
-        return f"Your game was successfully saved as {player}.yml!"
+        # file_name = f"./dork/saves/{game.hero.name}.yml"
+        # with open(file_name, "w") as save_file:
+        #     yaml.safe_dump(
+        #         data, save_file,
+        #         indent=4, width=80,
+        #     )
+
+        return f"Your game was successfully saved as {game.hero.name}.yml!"
 
 
 class Game:
@@ -369,6 +391,10 @@ class Game:
         else:
             out = "Guess you changed your mind!"
         return out, False
+
+    def _save_game(self):
+        Gamebuilder.save_game(self)
+        return "", False
 
     @staticmethod
     def _verbose_print(data, calls=2):
@@ -609,7 +635,7 @@ class RoomFactory:
 
         for coord, room in deepcopy(RoomFactory.worldmap).items():
             new_room = RoomFactory.worldmap.pop(coord)
-            RoomFactory.worldmap[new_room.pop("name")] = new_room
+            RoomFactory.worldmap[new_room["name"]] = new_room
 
         return RoomFactory.worldmap
 
