@@ -63,14 +63,11 @@ def repl():
     """read evaluate print loop"""
 
     dork = _new_game()
+    should_exit = False
 
-    while True:
+    while not should_exit:
         output, should_exit = _evaluate(cmd=_read(), dork=dork)
-        if should_exit:
-            break
-        elif output == "new game":
+        if output == "new game":
             dork = _new_game()
         else:
             print(output + "\n")
-
-    print("shutting down...")
