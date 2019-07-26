@@ -194,6 +194,7 @@ class Gamebuilder:
     """Build an instance of Game"""
 
     attrs = ["adjacent", "coordinates", "stats"]
+    cardinals = ["north", "south", "east", "west"]
 
     dict_factories = {
         "players": Player,
@@ -242,9 +243,8 @@ class Gamebuilder:
 
     @staticmethod
     def _make_paths(game):
-        adj = ["north", "south", "east", "west"]
         for _, room in game.rooms.items():
-            for direction in adj:
+            for direction in Gamebuilder.cardinals:
                 this_adj = getattr(room, direction)
                 setattr(room, direction, game.rooms.get(this_adj, None))
 
@@ -302,12 +302,11 @@ class Gamebuilder:
             out = {}
             for key, val in data.items():
                 if isinstance(val, (Item, Player)):
-                    print(type(data[key]).__bases__)
                     out[key] = _rec_data(vars(val))
-                elif isinstance(val, Room):
-                    out[key] = val.name
                 elif isinstance(val, dict):
                     out[key] = _rec_data(val)
+                elif isinstance(val, Room):
+                    out[key] = val.name
                 else:
                     out[key] = val
             return out
@@ -316,25 +315,29 @@ class Gamebuilder:
             "maze": game.maze,
             "rooms": {}
         }
+
         for name, room in game.rooms.items():
             new_room = {}
+            new_room["adjacent"] = {}
+            new_room["coordinates"] = {}
             for key, val in vars(room).items():
                 if isinstance(val, dict):
                     new_room[key] = _rec_data(val)
-                elif isinstance(val, Room):
-                    new_room[key] = val.name
+                elif key in Gamebuilder.cardinals:
+                    this_adj = val.name if val else None
+                    new_room["adjacent"][key] = this_adj
+                elif key in ["x", "y"]:
+                    new_room["coordinates"][key] = val
                 else:
                     new_room[key] = val
             data["rooms"][name] = new_room
 
-        # print(Game._verbose_print(data))
-
-        # file_name = f"./dork/saves/{game.hero.name}.yml"
-        # with open(file_name, "w") as save_file:
-        #     yaml.safe_dump(
-        #         data, save_file,
-        #         indent=4, width=80,
-        #     )
+        file_name = f"./dork/saves/{game.hero.name}.yml"
+        with open(file_name, "w") as save_file:
+            yaml.safe_dump(
+                data, save_file,
+                indent=4, width=80,
+            )
 
         return f"Your game was successfully saved as {game.hero.name}.yml!"
 
@@ -376,13 +379,7 @@ class Game:
     def _inventory(self):
         return self.hero.get_items(self.verbose), False
 
-    def _look(self, x="n"):
-        if x == "around":
-            items = self.hero.location.items
-            print("\nItems:")
-            for item in items:
-                print(item)
-            print()
+    def _look(self):
         return self.hero.location.description, False
 
     def _start_over(self):
@@ -393,8 +390,7 @@ class Game:
         return out, False
 
     def _save_game(self):
-        Gamebuilder.save_game(self)
-        return "", False
+        return Gamebuilder.save_game(self), False
 
     @staticmethod
     def _verbose_print(data, calls=2):
