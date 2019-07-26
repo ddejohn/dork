@@ -31,7 +31,7 @@ def _evaluate(cmd, dork):
     """Parse a command and execute it"""
 
     cmd = cmd.strip().split(" ", 1)
-    if cmd:
+    if cmd[0]:
         verb, *noun = cmd
         noun = noun[0] if noun else None
         call = _CMDS.get(verb, _MOVES.get(verb, _META.get(verb, _ERRS["u"])))

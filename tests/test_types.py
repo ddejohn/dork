@@ -24,7 +24,7 @@ def test_confirm_method_no(capsys, mocker):
 
     mocked_input = mocker.patch('builtins.input')
     mocked_input.side_effect = ["n"]
-    assert types.Game._confirm() is False
+    assert types.Game._confirm() == "guess you changed your mind!"
     captured = capsys.readouterr()
     assert "\n!!!WARNING!!! You will lose unsaved data!\n" in captured.out
     assert mocked_input.call_count == 1
@@ -47,7 +47,7 @@ def test_start_over_no(capsys, mocker, game):
 
     mocked_input = mocker.patch('builtins.input')
     mocked_input.side_effect = ["n", ".rq"]
-    assert game._start_over() == ("Guess you changed your mind!", False)
+    assert game._start_over() == ("guess you changed your mind!", False)
     captured = capsys.readouterr()
     assert "\n!!!WARNING!!! You will lose unsaved data!\n" in captured.out
     assert mocked_input.call_count == 1
