@@ -15,47 +15,47 @@ maze:
     - -2
     - 1
     - 2
-    - 1
-    - 2
-    - 1
-    - -2
-    - 1
-    - -2
--   - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
--   - -2
-    - 1
-    - 2
-    - 1
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
--   - -2
-    - 2
-    - -2
-    - -2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
--   - -2
     - 0
+    - 2
+    - 1
+    - -2
+    - 1
+    - -2
+-   - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+-   - -2
+    - 1
+    - 2
+    - 1
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+-   - -2
+    - 2
+    - -2
+    - -2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+-   - -2
+    - 1
     - -2
     - 1
     - 2
@@ -428,61 +428,7 @@ rooms:
             x: 3
             y: 1
         description: room 11 description
-        inventory:
-            cobwebbed rags:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -28
-                strength: null
-                type: filler
-                weight: 6
-            damaged alembic:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -36
-                strength: null
-                type: filler
-                weight: 22
-            dusty pot:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -34
-                strength: null
-                type: filler
-                weight: 9
-            pristine steel greaves:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: true
-                luck: -2
-                strength: 15
-                type: armor
-                weight: 22
-            ruined rope:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -4
-                strength: null
-                type: filler
-                weight: 5
-            waterlogged rope:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -5
-                strength: null
-                type: filler
-                weight: 14
+        inventory: {}
         name: room 11
         players:
             player 11:
@@ -511,24 +457,9 @@ rooms:
             x: 5
             y: 1
         description: room 12 description
-        inventory:
-            moldy candle:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -46
-                strength: null
-                type: filler
-                weight: 17
+        inventory: {}
         name: room 12
-        players:
-            devon:
-                description: the hero of dork!
-                equipped: []
-                inventory: {}
-                location: room 12
-                name: devon
+        players: {}
     room 13:
         adjacent:
             east: null
@@ -1629,8 +1560,77 @@ rooms:
                 strength: null
                 type: filler
                 weight: 9
+            waterlogged rope:
+                amount: 1
+                attack: null
+                description: ''
+                equipable: false
+                luck: -5
+                strength: null
+                type: filler
+                weight: 14
         name: room 8
         players:
+            devon:
+                description: the hero of dork!
+                equipped: []
+                inventory:
+                    cobwebbed rags:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -28
+                        strength: null
+                        type: filler
+                        weight: 6
+                    damaged alembic:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -36
+                        strength: null
+                        type: filler
+                        weight: 22
+                    dusty pot:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -34
+                        strength: null
+                        type: filler
+                        weight: 9
+                    moldy candle:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -46
+                        strength: null
+                        type: filler
+                        weight: 17
+                    pristine steel greaves:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: true
+                        luck: -2
+                        strength: 15
+                        type: armor
+                        weight: 22
+                    ruined rope:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -4
+                        strength: null
+                        type: filler
+                        weight: 5
+                location: room 8
+                name: devon
             player 8:
                 description: player 8 description
                 equipped:

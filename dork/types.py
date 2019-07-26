@@ -24,11 +24,11 @@ class Holder(Grandparent):
         super().__init__()
         self.inventory = {}
 
-    def get_items(self, verbose):
+    def get_items(self, caller, verbose):
         """Print all inventory items"""
 
         if self.inventory:
-            out = f"\nInventory"
+            out = f"\n{caller} inventory:"
         else:
             out = f"There's nothing here."
 
@@ -39,70 +39,6 @@ class Holder(Grandparent):
             else:
                 out += Game._brief_print(vars(item))
         return out
-
-
-class Usable(ABC):
-    """Abstract class of use behavior in items use method"""
-
-    @staticmethod
-    @abstractmethod
-    def use(target, name):
-        """Strategy pattern inspired by refactoring.guru
-        use method defaults to doing nothing"""
-
-
-class Attackable(Usable):
-    """Any object that can be swung will say it was swung"""
-
-    @staticmethod
-    def use(target, name):
-        """Swing use method"""
-        print("You swing the " + name + " at " + target)
-
-
-class NotUsable(Usable):
-    """Any object that cannot be used"""
-
-    @staticmethod
-    def use(target, name):
-        """Useless use method"""
-        print("You find no use of this item")
-
-
-class Openable(Usable):
-    """Object opening behavior class"""
-
-    @staticmethod
-    def use(target, name):
-        """Opens object targeted if possible"""
-        print("You insert the " + name + " into " + target)
-
-
-class Payable(Usable):
-    """Any object that can be used as gold"""
-
-    @staticmethod
-    def use(target, name):
-        """Gold use method"""
-        print("You use the " + name + " to pay " + target)
-
-
-class Puzzleable(Usable):
-    """Any object that can be used in a puzzle"""
-
-    @staticmethod
-    def use(target, name):
-        """Puzzle use method"""
-        print("You try to fit the " + name + " into the " + target)
-
-
-class Statable(Usable):
-    """Any object that can change stats"""
-
-    @staticmethod
-    def use(target, name):
-        """Stat change use method"""
-        print("The " + name + " takes effect on " + target)
 
 
 class Stats:
@@ -188,6 +124,34 @@ class Room(Adjacent, Coord, Holder):
         self.description = str
         self.players = {}
         self.instances.append(self)
+
+    def _take(self, hero, item_name):
+        out = ""
+        if not item_name:
+            room_copy = deepcopy(self.inventory)
+            for item in room_copy:
+                hero.inventory[item] = self.inventory.pop(item)
+                out += f"You took {item}\n"
+        elif item_name in self.inventory:
+            hero.inventory[item_name] = self.inventory.pop(item_name)
+            out += f"You took {item_name}. You took it well."
+        else:
+            out = f"There is no {item_name} here."
+        return out, False
+
+    def _drop(self, hero, item_name):
+        out = ""
+        if not item_name:
+            player_copy = deepcopy(hero.inventory)
+            for item in player_copy:
+                self.inventory[item] = hero.inventory.pop(item)
+                out += f"You dropped {item}\n"
+        elif item_name in hero.inventory:
+            self.inventory[item_name] = hero.inventory.pop(item_name)
+            out += f"You dropped {item_name}. How clumsy."
+        else:
+            out = f"There is no {item_name} in your inventory."
+        return out, False
 
 
 class Gamebuilder:
@@ -368,26 +332,32 @@ class Game:
 
     def _draw_maze(self):
         MazeFactory.draw(self.maze)
-        return "", False
+        return "\b", False
 
     def _move(self, cardinal):
         return self.hero.move(cardinal, self.maze), False
 
     def _examine(self):
-        return self.hero.location.get_items(self.verbose), False
+        return self.hero.location.get_items(
+            self.hero.location.name, self.verbose
+        ), False
 
     def _inventory(self):
-        return self.hero.get_items(self.verbose), False
+        return self.hero.get_items(
+            self.hero.name, self.verbose
+        ), False
 
     def _look(self):
         return self.hero.location.description, False
 
+    def _take_item(self, item_name=None):
+        return self.hero.location._take(self.hero, item_name)
+
+    def _drop_item(self, item_name=None):
+        return self.hero.location._drop(self.hero, item_name)
+
     def _start_over(self):
-        if self._confirm():
-            out = ""
-        else:
-            out = "Guess you changed your mind!"
-        return out, False
+        return self._confirm(), False
 
     def _save_game(self):
         return Gamebuilder.save_game(self), False
@@ -426,8 +396,8 @@ class Game:
                 input("Would you like to proceed? Y/N: ")
             )
             conf = {
-                "y": True,
-                "n": False
+                "y": "new game",
+                "n": "guess you changed your mind!"
             }.get(conf, None)
             if conf is None:
                 print("That is not a valid response!")

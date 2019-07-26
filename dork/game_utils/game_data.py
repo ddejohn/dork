@@ -41,13 +41,12 @@ CMDS = {
     "inv": ["_inventory"],
     "inventory": ["_inventory"],
     "examine": ["_examine"],
-    "add": ["_take"],
-    "grab": ["_take"],
-    "take": ["_take"],
-    "loot": ["_take"],
-    "use": ["_use_item"],
+    "add": ["_take_item"],
+    "grab": ["_take_item"],
+    "take": ["_take_item"],
+    "loot": ["_take_item"],
     "drop": ["_drop_item"],
-    "activate": ["_use_item"],
+    "toss": ["_drop_item"],
 }
 
 
@@ -58,7 +57,7 @@ META = {
     ".rq": ["_gtfo"],
     ".z": ["_zork"],
     ".m": ["_draw_maze"],
-    ".v": ["_toggle_verbose"]
+    ".v": ["_toggle_verbose"],
 }
 
 
