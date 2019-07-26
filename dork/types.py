@@ -2,10 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import os
-from abc import ABC, abstractmethod
 from copy import deepcopy
 from random import choices, choice, randint, shuffle
 from operator import add
+from inspect import getfullargspec as argspec
 import yaml
 import matplotlib.pyplot as plt
 from numpy import full as npf
@@ -317,7 +317,16 @@ class Game:
         self.hero = Player()
 
     def __call__(self, cmd, arg):
-        return getattr(self, cmd)(arg) if arg else getattr(self, cmd)()
+        do_func = getattr(self, cmd)
+        func_args = argspec(do_func).args
+        if arg:
+            if not func_args or ("self" in func_args and len(func_args) == 1):
+                out = self._repl_error("This command takes no arguments")
+            else:
+                out = do_func(arg)
+        else:
+            out = do_func()
+        return out
 
     def _toggle_verbose(self) -> (str, bool):
         self.verbose = not self.verbose
