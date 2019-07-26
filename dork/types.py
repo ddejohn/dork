@@ -383,7 +383,7 @@ class Game:
                 "y": "new game",
                 "n": "guess you changed your mind!"
             }.get(conf, None)
-            if conf is None:
+            if not conf:
                 print("That is not a valid response!")
             else:
                 break
