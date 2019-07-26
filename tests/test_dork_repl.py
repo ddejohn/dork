@@ -48,10 +48,11 @@ def test_all_moves_and_others(game):
 
     assert repl._evaluate(".v", game) == ("verbose inventory: ON", False)
     assert "There's nothing here." in repl._evaluate("i", game)
+    assert "room" in repl._evaluate("examine", game)[0]
+    assert "inventory:" in repl._evaluate("examine", game)[0]
 
     assert repl._evaluate(".v", game) == ("verbose inventory: OFF", False)
     assert "There's nothing here." in repl._evaluate("i", game)
-
     assert "room" in repl._evaluate("examine", game)[0]
     assert "inventory:" in repl._evaluate("examine", game)[0]
 
