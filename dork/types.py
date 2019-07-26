@@ -505,12 +505,11 @@ class PlayerFactory:
 
         for _ in range(randint(1, 3)):
             new_item = ItemFactory.build("player")
-            new_player["inventory"][new_item.pop("name")] = new_item
+            item_name = new_item.pop("name")
+            if new_item["stats"]["equipable"]:
+                new_player["equipped"].append(item_name)
 
-        for key, val in new_player["inventory"].items():
-            if val["stats"]["equipable"]:
-                new_player["equipped"].append(key)
-
+            new_player["inventory"][item_name] = new_item
         return new_player
 
 
