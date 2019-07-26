@@ -98,20 +98,18 @@ def test_mazefactory():
     assert isinstance(new_game, dict)
 
 
-def test_playerfactory():
-    """builds a player"""
+# def test_playerfactory():
+#     """builds a player"""
 
-    new_room = {
-        "name": "bumblebee tuna",
-        "description": "",
-        "coordinates": {
-            "x": 0,
-            "y": 0,
-        },
-        "adjacent": {},
-        "players": {},
-        "inventory": {},
-    }
-    new_player = types.PlayerFactory.build(0, new_room)
-    if not new_player["equipped"]:
-        test_playerfactory()
+#     new_room = {
+#         "name": "bumblebee tuna",
+#         "description": "",
+#         "coordinates": {},
+#         "adjacent": {},
+#         "players": {},
+#         "inventory": {},
+#     }
+
+#     new_player = types.PlayerFactory.build(0, new_room)
+#     if not new_player["equipped"]:
+#         test_playerfactory()
