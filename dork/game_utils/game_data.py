@@ -65,4 +65,6 @@ ERRS = {
     "u": ["_repl_error", "Sorry, I don't know that one."],
     "?": ["_repl_error", "Huh? Can you speak up?"],
     "no go": ["_repl_error", "You can't go that way"],
+    "which way": ["_repl_error", "Um. Where are you trying to go?"],
+    "twice": ["_repl_error", "A command so nice you said it twice!\n...idiot"]
 }
