@@ -37,7 +37,7 @@ def _evaluate(cmd, dork):
         call = _CMDS.get(verb, _MOVES.get(verb, _META.get(verb, _ERRS["u"])))
 
         if isinstance(call, dict):
-            method, arg = call.get(noun, _ERRS["no go"])
+            method, arg = call.get(noun, _ERRS["which way"])
         elif call not in _ERRS.values():
             if verb == noun:
                 method, arg = _ERRS["twice"]

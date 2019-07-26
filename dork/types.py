@@ -33,11 +33,9 @@ class Holder(Grandparent):
             out = f"There's nothing here."
 
         for name, item in self.inventory.items():
-            out += f"\n    {name}"
+            out += "\n    " + name
             if verbose:
                 out += Game._verbose_print(vars(item))
-            else:
-                out += Game._brief_print(vars(item))
         return out
 
 
@@ -366,21 +364,11 @@ class Game:
         return Gamebuilder.save_game(self), False
 
     @staticmethod
-    def _verbose_print(data, calls=2):
+    def _verbose_print(data):
         out = ""
         spc = "    "
         for key, val in data.items():
-            out += "\n" + spc*calls + f"{key}: {val}"
-        return out
-
-    @staticmethod
-    def _brief_print(data, calls=2):
-        out = ""
-        spc = "    "
-        for key, val in data.items():
-            if isinstance(val, dict) and calls < 3:
-                out += "\n" + spc*calls + \
-                    f"{key}{Game._brief_print(val, calls+1)}"
+            out += "\n" + spc*2 + f"{key}: {val}"
         return out
 
     @staticmethod

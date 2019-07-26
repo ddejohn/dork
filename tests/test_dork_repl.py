@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Basic tests for state and entity relationships in dork"""
 
+
 from dork import repl, cli, types
 # pylint: disable=protected-access
 
@@ -15,7 +16,7 @@ def test_repl_evaluate(game):
     assert repl._evaluate("Go", game) == (
         "Sorry, I don't know that one.", False)
     assert repl._evaluate("walk map", game) == (
-        "You can't go that way", False)
+        "Um. Where are you trying to go?", False)
 
 
 def test_all_moves_and_others(game):
@@ -34,40 +35,32 @@ def test_all_moves_and_others(game):
     assert repl._evaluate(".z", game) == (
         "holy *%&#@!!! a wild zork appeared!", False
     )
-
     assert repl._evaluate("look david", game) == (
         "This command takes no arguments", False
     )
-
     assert repl._evaluate(".z david", game) == (
         "This command takes no arguments", False
     )
-
     assert repl._evaluate("north north", game) == (
         "A command so nice you said it twice!\n...idiot", False
     )
-
     assert repl._evaluate(".m", game) == ("\x08", False)
 
-    assert repl._evaluate(".v", game) == (
-        "verbose inventory: ON", False)
-
-    assert "There's nothing here." in repl._evaluate("i", game)
-    assert "inventory:" in repl._evaluate("examine", game)[0]
-
-    assert repl._evaluate(".v", game) == (
-        "verbose inventory: OFF", False)
-
+    assert repl._evaluate(".v", game) == ("verbose inventory: ON", False)
     assert "There's nothing here." in repl._evaluate("i", game)
 
+    assert repl._evaluate(".v", game) == ("verbose inventory: OFF", False)
+    assert "There's nothing here." in repl._evaluate("i", game)
+
+    assert "room" in repl._evaluate("examine", game)[0]
     assert "inventory:" in repl._evaluate("examine", game)[0]
 
-    assert "t" in repl._evaluate("look", game)[0]
+    assert "room" in repl._evaluate("look", game)[0]
+    assert "description" in repl._evaluate("look", game)[0]
 
     assert repl._evaluate(".rq", game) == (
-        "Thanks for playing DORK, tester!", True)
-
-    repl._evaluate(".rq", game)
+        "Thanks for playing DORK, tester!", True
+    )
 
 
 def test_repl_new_game():
