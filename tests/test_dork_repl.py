@@ -60,7 +60,7 @@ def test_all_moves_and_others(game):
     assert "description" in repl._evaluate("look", game)[0]
 
     assert repl._evaluate(".rq", game) == (
-        "Thanks for playing DORK, tester!", True
+        "\nThanks for playing DORK, tester!", True
     )
 
 

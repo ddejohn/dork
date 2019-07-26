@@ -329,7 +329,7 @@ class Game:
         return out, False
 
     def _gtfo(self):
-        return f"Thanks for playing DORK, {self.hero.name}!", True
+        return f"\nThanks for playing DORK, {self.hero.name}!", True
 
     def _draw_maze(self):
         MazeFactory.draw(self.maze)
