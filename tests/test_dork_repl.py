@@ -10,13 +10,10 @@ def test_repl_evaluate(game):
 
     assert repl._evaluate("", game) == (
         'Huh? Can you speak up?', False)
-
     assert repl._evaluate("     ", game) == (
         'Huh? Can you speak up?', False)
-
     assert repl._evaluate("Go", game) == (
         "Sorry, I don't know that one.", False)
-
     assert repl._evaluate("walk map", game) == (
         "You can't go that way", False)
 
@@ -27,13 +24,10 @@ def test_all_moves_and_others(game):
     for _ in range(4):
         if "description" in repl._evaluate("n", game):
             break
-
         if "description" in repl._evaluate("s", game):
             break
-
         if "description" in repl._evaluate("e", game):
             break
-
         if "description" in repl._evaluate("w", game):
             break
 
@@ -127,5 +121,9 @@ def test_repl_evaluate_safety(game):
 def test_repl_bad_keys(game):
     """these are bad keys for take and drop commands"""
 
-    assert repl._evaluate("drop LARSEN", game)
-    assert repl._evaluate("take LARSEN", game)
+    assert repl._evaluate("drop LARSEN", game) == (
+        "There is no LARSEN in your inventory.", False
+    )
+    assert repl._evaluate("take LARSEN", game) == (
+        "There is no LARSEN here.", False
+    )

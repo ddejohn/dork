@@ -94,4 +94,5 @@ def test_factory_data():
 def test_mazefactory():
     """builds all game types"""
 
-    assert isinstance(types.MazeFactory.build(), dict)
+    new_game = types.MazeFactory.build()
+    assert isinstance(new_game, dict)

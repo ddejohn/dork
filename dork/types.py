@@ -220,12 +220,6 @@ class Gamebuilder:
         return rooms
 
     @staticmethod
-    def _set_attrs(obj, **data):
-        for key, val in data.items():
-            setattr(obj, key, val)
-        return obj
-
-    @staticmethod
     def _rec_inst(clz, **data):
         new_obj = clz()
         for key, val in data.items():
@@ -376,24 +370,17 @@ class Game:
         out = ""
         spc = "    "
         for key, val in data.items():
-            if isinstance(val, dict):
-                out += "\n" + spc*calls + \
-                    f"{key}:{Game._verbose_print(val, calls+1)}"
-            elif val:
-                out += "\n" + spc*calls + f"{key}: {val}"
+            out += "\n" + spc*calls + f"{key}: {val}"
         return out
 
     @staticmethod
     def _brief_print(data, calls=2):
         out = ""
-        col = ""
         spc = "    "
         for key, val in data.items():
             if isinstance(val, dict) and calls < 3:
-                if calls < 2:
-                    col = ":"
                 out += "\n" + spc*calls + \
-                    f"{key}{col}{Game._brief_print(val, calls+1)}"
+                    f"{key}{Game._brief_print(val, calls+1)}"
         return out
 
     @staticmethod
