@@ -41,14 +41,12 @@ CMDS = {
     "inv": ["_inventory"],
     "inventory": ["_inventory"],
     "examine": ["_examine"],
-    "grab": ["_take"],
-    "take": ["_take"],
-    "loot": ["_take"],
-    "use": ["_use_item"],
+    "add": ["_take_item"],
+    "grab": ["_take_item"],
+    "take": ["_take_item"],
+    "loot": ["_take_item"],
     "drop": ["_drop_item"],
-    "activate": ["_use_item"],
-    # "add": _take,
-    # "loot": _take,
+    "toss": ["_drop_item"],
 }
 
 
@@ -62,12 +60,13 @@ META = {
     ".rq": ["_gtfo"],
     ".z": ["_zork"],
     ".m": ["_draw_maze"],
-    ".v": ["_toggle_verbose"]
+    ".v": ["_toggle_verbose"],
 }
 
 
 ERRS = {
     "u": ["_repl_error", "Sorry, I don't know that one."],
     "?": ["_repl_error", "Huh? Can you speak up?"],
-    "no go": ["_repl_error", "You can't go that way"],
+    "which way": ["_repl_error", "Um. Where are you trying to go?"],
+    "twice": ["_repl_error", "A command so nice you said it twice!\n...idiot"]
 }
