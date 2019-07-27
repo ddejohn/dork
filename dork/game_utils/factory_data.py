@@ -1,6 +1,8 @@
 """data for factories"""
 
+
 from random import randint
+
 
 ITEMS = {
     "condition": {

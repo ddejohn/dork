@@ -1,5 +1,6 @@
-"""Base types for the Dork game"""
 # -*- coding: utf-8 -*-
+"""Base types for the Dork game"""
+
 
 import os
 from copy import deepcopy
@@ -100,20 +101,21 @@ class Player(Holder):
         if not adjacent_room:
             out = f"You cannot go {cardinal} from here."
         else:
-            maze[self.location.x][self.location.y] = MazeFactory.room_color
-
             adjacent_room.players[self.name] = \
                 self.location.players.pop(self.name)
+
+            maze[self.location.x][self.location.y] = MazeFactory.room_color
             self.location = adjacent_room
             maze[self.location.x][self.location.y] = MazeFactory.player_color
 
-            out = self.location.description
             MazeFactory.update(maze)
+            out = self.location.description
         return out
 
 
 class Room(Adjacent, Coord, Holder):
     """A room on the worldmap"""
+    # pylint: disable=too-many-instance-attributes
 
     instances = []
 
@@ -175,7 +177,7 @@ class Gamebuilder:
             hero_data = {
                 "name": player_name,
                 "description": "the hero of dork!",
-                "location": "room 0",
+                "location": "Entrance",
                 "inventory": {},
                 "equipped": []
             }
@@ -302,6 +304,7 @@ class Game:
     """An instance of Dork"""
 
     verbose = False
+    dataaa = {}
 
     def __init__(self):
         self.maze = []
