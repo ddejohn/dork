@@ -101,15 +101,16 @@ class Player(Holder):
         if not adjacent_room:
             out = f"You cannot go {cardinal} from here."
         else:
-            maze[self.location.x][self.location.y] = MazeFactory.room_color
-
             adjacent_room.players[self.name] = \
                 self.location.players.pop(self.name)
+
+            maze[self.location.x][self.location.y] = MazeFactory.room_color
             self.location = adjacent_room
             maze[self.location.x][self.location.y] = MazeFactory.player_color
 
             MazeFactory.update(maze)
-        return self.location.description
+            out = self.location.description
+        return out
 
 
 class Room(Adjacent, Coord, Holder):
