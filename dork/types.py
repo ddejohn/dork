@@ -108,11 +108,8 @@ class Player(Holder):
             self.location = adjacent_room
             maze[self.location.x][self.location.y] = MazeFactory.player_color
 
-            outt = self.location.description
-            # outtt = self.location.name
-            out = "You have entered "+outt
             MazeFactory.update(maze)
-        return out
+        return self.location.description
 
 
 class Room(Adjacent, Coord, Holder):
@@ -332,10 +329,6 @@ class Game:
             False: "verbose inventory: OFF"
         }[self.verbose]
         return out, False
-
-    def _set_location(self):
-        """Set location based on
-        """
 
     def _gtfo(self):
         return f"\nThanks for playing DORK, {self.hero.name}!", True
