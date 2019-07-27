@@ -15,51 +15,51 @@ maze:
     - -2
     - 1
     - 2
+    - 1
+    - 2
+    - 1
+    - -2
+    - 1
+    - -2
+-   - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+-   - -2
+    - 1
+    - 2
+    - 1
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+-   - -2
+    - 2
+    - -2
+    - -2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+    - 2
+    - -2
+-   - -2
+    - 1
+    - -2
+    - 1
+    - 2
     - 0
-    - 2
-    - 1
-    - -2
-    - 1
-    - -2
--   - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
--   - -2
-    - 1
-    - 2
-    - 1
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
--   - -2
-    - 2
-    - -2
-    - -2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
-    - 2
-    - -2
--   - -2
-    - 1
-    - -2
-    - 1
-    - 2
-    - 1
     - -2
     - 1
     - 2
@@ -1492,54 +1492,114 @@ rooms:
             x: 5
             y: 5
         description: room 7 description
-        inventory:
-            chipped note:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -34
-                strength: null
-                type: filler
-                weight: 18
-            damaged rags:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -21
-                strength: null
-                type: filler
-                weight: 15
-            filthy bone gauntlets:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: true
-                luck: 3
-                strength: 17
-                type: armor
-                weight: 20
-            rusty cuffs:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: false
-                luck: -24
-                strength: null
-                type: filler
-                weight: 12
-            untouched gold amulet:
-                amount: 1
-                attack: null
-                description: ''
-                equipable: true
-                luck: -3
-                strength: 4
-                type: jewelry
-                weight: 0
+        inventory: {}
         name: room 7
-        players: {}
+        players:
+            devon:
+                description: the hero of dork!
+                equipped: []
+                inventory:
+                    chipped note:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -34
+                        strength: null
+                        type: filler
+                        weight: 18
+                    cobwebbed rags:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -28
+                        strength: null
+                        type: filler
+                        weight: 6
+                    damaged alembic:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -36
+                        strength: null
+                        type: filler
+                        weight: 22
+                    damaged rags:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -21
+                        strength: null
+                        type: filler
+                        weight: 15
+                    dusty pot:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -34
+                        strength: null
+                        type: filler
+                        weight: 9
+                    filthy bone gauntlets:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: true
+                        luck: 3
+                        strength: 17
+                        type: armor
+                        weight: 20
+                    moldy candle:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -46
+                        strength: null
+                        type: filler
+                        weight: 17
+                    pristine steel greaves:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: true
+                        luck: -2
+                        strength: 15
+                        type: armor
+                        weight: 22
+                    ruined rope:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -4
+                        strength: null
+                        type: filler
+                        weight: 5
+                    rusty cuffs:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: false
+                        luck: -24
+                        strength: null
+                        type: filler
+                        weight: 12
+                    untouched gold amulet:
+                        amount: 1
+                        attack: null
+                        description: ''
+                        equipable: true
+                        luck: -3
+                        strength: 4
+                        type: jewelry
+                        weight: 0
+                location: room 7
+                name: devon
     room 8:
         adjacent:
             east: room 14
@@ -1571,66 +1631,6 @@ rooms:
                 weight: 14
         name: room 8
         players:
-            devon:
-                description: the hero of dork!
-                equipped: []
-                inventory:
-                    cobwebbed rags:
-                        amount: 1
-                        attack: null
-                        description: ''
-                        equipable: false
-                        luck: -28
-                        strength: null
-                        type: filler
-                        weight: 6
-                    damaged alembic:
-                        amount: 1
-                        attack: null
-                        description: ''
-                        equipable: false
-                        luck: -36
-                        strength: null
-                        type: filler
-                        weight: 22
-                    dusty pot:
-                        amount: 1
-                        attack: null
-                        description: ''
-                        equipable: false
-                        luck: -34
-                        strength: null
-                        type: filler
-                        weight: 9
-                    moldy candle:
-                        amount: 1
-                        attack: null
-                        description: ''
-                        equipable: false
-                        luck: -46
-                        strength: null
-                        type: filler
-                        weight: 17
-                    pristine steel greaves:
-                        amount: 1
-                        attack: null
-                        description: ''
-                        equipable: true
-                        luck: -2
-                        strength: 15
-                        type: armor
-                        weight: 22
-                    ruined rope:
-                        amount: 1
-                        attack: null
-                        description: ''
-                        equipable: false
-                        luck: -4
-                        strength: null
-                        type: filler
-                        weight: 5
-                location: room 8
-                name: devon
             player 8:
                 description: player 8 description
                 equipped:
