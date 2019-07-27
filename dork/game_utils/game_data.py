@@ -1,5 +1,6 @@
 """Data and commands for REPL"""
 
+
 __all__ = ["CMDS", "MOVES", "ERRS", "META", "TITLE"]
 
 
@@ -28,6 +29,7 @@ MOVES = {
     "east": ["_move", "east"],
     "west": ["_move", "west"]
 }
+
 
 CMDS = {
     "go": MOVES,
