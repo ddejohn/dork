@@ -1,82 +1,8 @@
 """data for factories"""
 
+
 from random import randint
 
-DEFAULT_ROOMS = {"Entrance": "the beginning. Go explore!!!",
-                 "End": "the end of the maze. Congrats on \
-completing DORK!!!"}
-
-ROOMS = [" Cave ",
-         " Forest ",
-         " Cemetery ",
-         " Valley ",
-         " Troll Territory ",
-         " Mansion ",
-         " Mordor ",
-         " Ghost Town ",
-         " MSU Denver Campus ",
-         " Water Park ",
-         " Area 51 ",
-         " Restaurant ",
-         " Basketball Court ",
-         " Rat Tunnel ",
-         " Chicken Coup ",
-         " Tomb ",
-         " Haunted House ",
-         " Vandalized Store ",
-         " Jungle ",
-         " Desert ",
-         " Asylum ",
-         " Farm ",
-         " Amusement Park ",
-         " Movie Theater ",
-         " Mountain",
-         " Blank ",
-         " Blankk ",
-         " Blankkk ",
-         " Blankkkk ",
-         " BBlank ",
-         " BBlankk ",
-         " BBlankkk ",
-         " BBlankkkk "]
-
-DIRS = {"north": "south",
-        "south": "north",
-        "east": "west",
-        "west": "east"}
-
-ADJ_ROOM_DESCRIPTIONS = {"1": "Also, this appears to be a dead end!",
-                         "2": {0: "From here, all directions seem to be \
-blocked, except",
-                               1: "There is a strong smell coming from the",
-                               2: "There seems to be a path leading to the",
-                               3: "You hear something coming from the",
-                               4: "Something tells you to go",
-                               5: "You might be able to go",
-                               6: "From here, it seems the direction \
-possibilites are",
-                               7: "There appears to be something odd"},
-                         "3": {0: "Three directions seem possible...",
-                               1: "You hear a sound, but you can't \
-decide if it came from",
-                               2: "This is getting tricky... It looks \
-like you can go",
-                               3: "You can't decide whether to go",
-                               4: "Confusion arises, the possibilities \
-of direction are"},
-                         "4": "Looking around, you notice all directions \
-                             are possible, this could get confusing..."}
-
-ROOM_INV_DESCRIPTIONS = {"1": {0: "but first, it looks like there are several\
- items around here that you might be able to take.",
-                               1: "but first, take a look around and see \
-what you can find.",
-                               2: "before you leave this room, you might \
-wanna take a look around and see what you can find.",
-                               3: "It might be a good idea to loot this \
-area before you leave"},
-                         "2": "It doesn't look like there are many items \
-around here, might as well get going."}
 
 ITEMS = {
     "condition": {
